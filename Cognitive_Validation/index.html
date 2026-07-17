@@ -81,8 +81,8 @@
           <li>Not imply mean/offensive behavior, and not quote the dialogue.</li>
           <li>Match the style/length of the gold answer.</li>
         </ul>
-        <p class="mb-1"><b>Rate the distractors overall (1–5):</b> how correct they actually are for the final utterance. Good distractors should score <b>low</b> (they should be wrong). A high score means a distractor is accidentally correct — a data problem.</p>
-        <div class="scale-note">1 = all clearly wrong (good distractors) · 5 = one or more are actually correct (bad distractors)</div>
+        <p class="mb-1"><b>Rate the distractors overall (1–5):</b> how <b>good</b> they are as distractors — i.e. plausible yet definitely wrong for the final utterance. A low score means bad distractors (e.g. accidentally correct, or trivially wrong via a shortcut); a high score means good, well-designed distractors.</p>
+        <div class="scale-note">1 = bad distractors · 5 = good distractors (plausible but definitely wrong)</div>
 
         <h6 class="fw-bold mt-3">Flag &amp; notes</h6>
         <p class="mb-0">Enable <b>"These options don't fit"</b> if the whole question is broken for this conversation (e.g. wrong branch, incoherent options), and use the <b>note</b> field to explain any problem you saw.</p>
@@ -143,11 +143,11 @@ function isAnswered(i) {
     return DIMS.every(d => r.answers[d] && r.answers[d].gold_score != null && r.answers[d].distractors_score != null);
 }
 
-function ratingHtml(key) {
+function ratingHtml(key, hint) {
     let h = '<div class="rating">';
     for (let i = 1; i <= 5; i++)
         h += `<input type="radio" name="${key}" id="${key}_${i}" value="${i}"><label for="${key}_${i}">${i}</label>`;
-    h += '</div><div class="scale-hint">1 = completely wrong · 5 = completely correct</div>';
+    h += `</div><div class="scale-hint">${hint}</div>`;
     return h;
 }
 
@@ -171,13 +171,13 @@ function render() {
             <div class="gold-box">
                 <div class="fw-bold mb-1">Gold answer:</div>${escapeHtml(dim.gold)}
                 <div class="mt-2">How well does this describe the final utterance?</div>
-                ${ratingHtml(d+"_gold")}
+                ${ratingHtml(d+"_gold", "1 = completely wrong · 5 = completely correct")}
             </div>
             <div class="distractor-box">
                 <div class="fw-bold mb-1">Distractor answers:</div>
                 <ul class="dlist">${distractors}</ul>
-                <div class="mt-2">Overall, how correct are these distractors?</div>
-                ${ratingHtml(d+"_distractors")}
+                <div class="mt-2">Overall, how good are these as distractors (plausible but definitely wrong)?</div>
+                ${ratingHtml(d+"_distractors", "1 = bad distractors · 5 = good distractors")}
             </div>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="${d}_flag">
